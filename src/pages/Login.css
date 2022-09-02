@@ -1,0 +1,104 @@
+.login-block {
+    background-image: url('/public/images/christin-hume-mfB1B1s4sMc-unsplash.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100%;
+    background-color: rgba(1, 27, 75, 0.938);
+    background-blend-mode: soft-light;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.img-sub {
+    width: 90px;
+    height: 90px;
+}
+
+.img {
+    padding: 5px;
+    position: absolute;
+    top: 20px;
+    left: 40px;
+}
+
+.sub-main {
+    /* border: 2px solid aliceblue; */
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    height: 250px;
+    width: 500px;
+    
+    /* padding: 10px; */
+}
+
+.login__h3 {
+    color: rgb(250, 251, 252);
+    /* margin-bottom: 30px;
+    margin-top: 10px; */
+    margin: auto;
+    /* padding-bottom: 2px; */
+}
+
+.login__h6 {
+    color: aliceblue;
+    /* margin-bottom: 40px;
+    margin-top: 10px; */
+    margin: auto;
+    /* padding-bottom: 5px; */
+}
+
+.login__form {
+    justify-content: center;
+    align-items: center;
+    display: grid;
+}
+
+input {
+    width: 400px;
+    height: 40px;
+    margin-bottom: 10px;
+    outline: none;
+    text-decoration: none;
+    padding: 5px;
+    border: none;
+    border-radius: 4px;
+    margin: 0px auto;
+    /* color: aliceblue; */
+}
+
+.login__lable{
+    color: white !important;
+}
+
+.login__button {
+    width: 400px;
+    height: 45px;
+    outline: none;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    background-color: rgb(70, 70, 236);
+    color: aliceblue;
+    font-size: 18px;
+    margin: 0px auto;
+    margin-top: 15px;
+}
+
+.login__button:hover {
+    background-color: aliceblue;
+    color: blue;
+}
+
+.login__button:active {
+    border: none;
+}
+.hide{
+    display: none;
+}
+.display{
+    display: block;
+}
