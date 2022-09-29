@@ -768,7 +768,7 @@ function inviteMembers(e?: { preventDefault: () => void; }){
      setUpdateGender(tableRow.cells[4].innerHTML);
      setUpdateEmail(tableRow.cells[5].innerHTML);
      setUpdatePhone(tableRow.cells[6].innerHTML);
-     setUpdateDate(tableRow.cells[7].innerHtml);
+     setUpdateDate(tableRow.cells[7].innerHTML);
      setUpdateChurch(tableRow.cells[8].innerHTML);
 
   }
@@ -782,7 +782,7 @@ function inviteMembers(e?: { preventDefault: () => void; }){
     setUpdateGender(tableRow.cells[4].innerHTML);
     setUpdateEmail(tableRow.cells[5].innerHTML);
     setUpdatePhone(tableRow.cells[6].innerHTML);
-    setUpdateDate(tableRow.cells[7].innerHtml);
+    setUpdateDate(tableRow.cells[7].innerHTML);
     setUpdateChurch(tableRow.cells[8].innerHTML);
   } 
 
@@ -799,6 +799,7 @@ function inviteMembers(e?: { preventDefault: () => void; }){
 
   const headers = ['ID','Title', 'First Name', 'Last Name', 'Gender', 'Email', 'Phone Number', 'Date of Birth', 'Church', " "]
   const memberArray = tableData.map(({Id, Title, FirstName, LastName, Gender, Email, PhoneNumber, DateOfBirth, Church,}) => {
+     console.log(DateOfBirth)
       return {Id, Title, FirstName, LastName, Gender, Email, PhoneNumber, DateOfBirth, Church, }
   })
   const actions = <React.Fragment >
