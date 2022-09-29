@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { useStorage } from "../utilities/LocalStorage";
 import { useGet } from "../utilities/HttpConnection";
 import Context from "../components/Contexts";
+import requests from "../utilities/requests";
 
-const BASE_URL: string  = 'https://celz4-api.herokuapp.com';
+// const BASE_URL: string  = 'https://celz4-api.herokuapp.com';
 
 const Login = () => {
   const emailRef = useRef<HTMLInputElement>();
@@ -22,7 +23,8 @@ const Login = () => {
       event?.preventDefault();
       const password = passwordRef.current?.value;
       const email = emailRef.current?.value
-     await fetch(`${BASE_URL}/v2/admin/login`,{
+      console.log(email, password)
+     await fetch(`${requests.loginUsers}`,{
         headers: {
           'content-Type': 'application/json'
          },
@@ -32,7 +34,7 @@ const Login = () => {
         if(data.status == 'ok'){
           console.log(data);
           storage.storeData(data.token);
-          navigate('/dashboard'); 
+          navigate('/manage-members'); 
           userContext.signIn();
         }else{
           setErrorAlert(true);

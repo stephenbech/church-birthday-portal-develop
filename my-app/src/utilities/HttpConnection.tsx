@@ -73,7 +73,9 @@ export interface manageChurch{
 export interface inviteAdmin {
      firstName: string| null | undefined ;
      lastName: string | null | undefined;
+     gender: string | null | undefined;
      email: string | null | undefined;
+     phoneNumber: string | null | undefined;
      role: string | null | undefined;
      church: string | null | undefined;
      groupChurch: string | null | undefined;

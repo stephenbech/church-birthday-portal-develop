@@ -1,20 +1,20 @@
 import React, { useContext,  useState, useRef, useEffect, HtmlHTMLAttributes } from 'react';
 import Header from '../components/Header';
 import SideNav from '../components/SideNav';
-import  Styled  from 'styled-components';
-import './ManageAdmin.css';
+import Styled from 'styled-components';
+import requests from '../utilities/requests';
+import './ManageMembers.css';
 import Context from '../components/Contexts';
 import DataTable from '../components/DataTable';
 import Modal from '../components/Modal';
+import { MdDeleteForever} from 'react-icons/md';
 import { FaRegEye} from 'react-icons/fa';
 import {FiRefreshCw} from 'react-icons/fi';
 import USEMODAL from '../components/USEMODAL';
 import { useNavigate } from 'react-router';
 import { BiPlusMedical } from "react-icons/bi";
-import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css'
-import jwt_decode from "jwt-decode";
-import { group } from 'console';
+import Footer from '../components/Footer';
 
 let churchesDetails = 
      [
@@ -259,7 +259,7 @@ let churchesDetails =
               "Group":"Central Group"
           },
           {
-              "ChurchName":"CE AIT Road",
+              "ChurchName":"Christ Embassy AIT Road",
               "PastorName":" Brother Ade Adetimilehin ",
               "PhoneNumber":"+2348060452857",
               "Group":"Central Group"
@@ -291,7 +291,7 @@ let churchesDetails =
     ]
 
     
-function ManageAdmin() {
+function ManageMembers() {
   const userContext = useContext(Context);
   const navigate = useNavigate();
   const {isShown, toggle } = USEMODAL();
@@ -299,15 +299,17 @@ function ManageAdmin() {
 
    const [content, setContent] = useState(<></>)
    const [headerText, setHeaderText] = useState("")
+   const titleRef = useRef<HTMLInputElement>();
    const firstnameRef = useRef<HTMLInputElement>();
    const lastnameRef = useRef<HTMLInputElement >();
+   const genderRef = useRef<HTMLInputElement >();
    const emailRef = useRef<HTMLInputElement >();
    const phoneRef = useRef<HTMLInputElement >();
    const dateRef = useRef<HTMLInputElement >();
-   const roleRef = useRef<HTMLInputElement >();
    const churchRef = useRef<HTMLInputElement>();
    const groupchurchRef = useRef<HTMLInputElement>();
    const [groupChurch, setGroupChurch] = useState('');
+   const [Zone, setZone] = useState('');
 
    // Alert states
   const [alertHeader, setAlertHeader] = useState('');
@@ -315,17 +317,25 @@ function ManageAdmin() {
   const [alertContent, setAlertContent] = useState('');
   const [alertClass, setAlertClass] = useState('');
 
-  // State for updating the admin
+  // State for updating the memmbers
   const [id, setId] = useState('')
   const [updateFirstName, setUpdateFirstName] = useState('')
   const [updateLastName, setUpdateLastName] = useState('')
   const [updateEmail, setUpdateEmail] = useState('')
-  const [updatePhoneNumber, setUpdatePhoneNumber] = useState('')
+  const [updatePhone, setUpdatePhone] = useState('')
   const [updateRole, setUpdateRole] = useState('')
   const [updateDate, setUpdateDate] = useState('')
+  const [updateGender, setUpdateGender] = useState('')
   const [updateChurch, setUpdateChurch] = useState('')
-  const [updateGroup, setUpdateGroup] = useState('')
+  const [tableData, setTableData] = useState([])
 
+     //     
+  useEffect(() => {
+     fetch(`${requests.getmembersByChurchId}${userContext.adminChurchId}`).then(response =>{return response.json()}).then((data) => {
+          setTableData(data.result)
+          console.log(data)
+     })
+  }, [])
   
   
   // document.getElementById('church')!.addEventListener('change', handleChurchChange);
@@ -344,127 +354,140 @@ function ManageAdmin() {
   }
 
 
-  function sendEmail(e?: { preventDefault: () => void; }) {
-      e?.preventDefault();
-      let params = new URLSearchParams()
-      let role = document.getElementById('role') as HTMLSelectElement;
-      let church = document.getElementById('church') as HTMLSelectElement;
-      let groupChurch = document.getElementById('groupChurch') as HTMLInputElement; 
-      console.log(role.value);
-      params.set('firstname', `${firstnameRef.current?.value}`)
-      params.set('lastname', `${lastnameRef.current?.value}`)
-      params.set('email', `${emailRef.current?.value}`)
-      params.set('role', `${role.value}`)
-      params.set('church', `${church.value}`)
-      params.set('groupchurch', `${groupChurch.value}`);
-      console.log(params.toString())
-      Email.send({
-           SecureToken : "f2cce189-d9e8-4bc6-8604-bb86a87a4f88",
-           To : `${emailRef.current?.value}`,
-           From : "michaelchinye2018@gmail.com",
-           Subject : "Admin Invitation",
-           Body : `<!DOCTYPE html>
-           <html lang="en">
-              <head>
-                   <meta charset="UTF-8">
-                   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                   <title>Document</title>
+//   function sendEmail(e?: { preventDefault: () => void; }) {
+//       e?.preventDefault();
+//       let params = new URLSearchParams()
+//       let role = document.getElementById('role') as HTMLSelectElement;
+//       let church = document.getElementById('church') as HTMLSelectElement;
+//       let groupChurch = document.getElementById('groupChurch') as HTMLInputElement; 
+//       console.log(role.value);
+//       params.set('firstname', `${firstnameRef.current?.value}`)
+//       params.set('lastname', `${lastnameRef.current?.value}`)
+//       params.set('email', `${emailRef.current?.value}`)
+//       params.set('role', `${role.value}`)
+//       params.set('church', `${church.value}`)
+//       params.set('groupchurch', `${groupChurch.value}`);
+//       console.log(params.toString())
+//       Email.send({
+//            SecureToken : "f2cce189-d9e8-4bc6-8604-bb86a87a4f88",
+//            To : `${emailRef.current?.value}`,
+//            From : "michaelchinye2018@gmail.com",
+//            Subject : "Admin Invitation",
+//            Body : `<!DOCTYPE html>
+//            <html lang="en">
+//               <head>
+//                    <meta charset="UTF-8">
+//                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+//                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+//                    <title>Document</title>
             
-                   <style>
-                        .imgDiv{
-                          height: 300px;
-                        }
-                        .content{
-                          padding: 50px;
-                        }
-                        h2{
-                          font-size: 18px;
-                        }
-                        @media only screen and (min-width: 480px) and (max-width: 767px){
-                               h1{
-                                    font-size: 22px;
-                               }
-                               h2{
-                                    font-size: 20px;
-                               }
-                               h3{
-                                    font-size: 19px;
-                               }
-                               p{
-                                    font-size: 16px;
-                               }
-                               .content{
-                                    padding: 20px;
-                               }
-                               .imgDiv{
-                                    height: 180px;
-                               }
-                        }
-                        @media (max-width: 767px){
-                               h1{
-                                    font-size: 22px;
-                               }
-                               h2{
-                                    font-size: 20px;
-                               }
-                               h3{
-                                    font-size: 19px;
-                               }
-                               p{
-                                    font-size: 16px;
-                               }
-                               .content{
-                                    padding: 20px;
-                               }
-                               .imgDiv{
-                                    height: 180px;
-                               }
-                        }
-                   </style>
-              </head>
-              <body>
-                   <div class="emailContainer" style = "background-color: #f9f9f9; margin: 0px auto;">
-                        <div>
-                            <div style="width: 100%;" class="imgDiv">
-                                 <a  href="index.html"><img style="width: 100%; height: 100%; object-fit: cover;" src="https://res.cloudinary.com/mike-ik/image/upload/v1652902981/Celz4-church-portal/toy-bricks-table-with-word-welcome_mdfguw.jpg"
-                                 alt=""></a>
-                             </div>
-                        </div>
-                        <div  class="content">
-                               <h1 style="text-align: center; color:#003366;">Christ Embassy Lagos Zone 4</h1>
-                               <h2 class="title" style="color:#003366;">Admin Invitation!</h2>
-                               <h3><span id="applicantName" style="color: #003366; ">Hi <b><i>${firstnameRef.current?.value} ${lastnameRef.current?.value}</i></b></span></h3>
-                               <p style="color: lignt-grey; line-height: 20px;">
-                                   Congratulations, you have been invited to become a ${role.value} for ${church.value} Church
-                                    <br/><br/>
-                                    Kindly follow the link below to complete your registration and begin your administrative work
-                               </p>
-                               <ul class="menu">
-                                    <li style="list-style-type: none;">Full Name: <b style="color:#003366; padding: 0px 5px;">${firstnameRef.current?.value} ${lastnameRef.current?.value}</b></li>
-                                    <li style="list-style-type: none;">Role: <b style="color:#003366; padding: 0px 5px;">${role.value}</b></li>
-                               </ul>
-                               <p class="sign-up">Click <span><a href="http://localhost:3000/create-account?${params.toString()}" id="signUpLink" >here</a></span> to proceed to Create your Account</p>
-                        </div>
-                   </div>
-              </body>
-           </html>`
-      }).then(() => {
-        setSuccessAlert(true); setAlertClass('alert alert-success alert-dismissible display'); setAlertContent(`
-        ${firstnameRef.current?.value} ${lastnameRef.current?.value} has successfully been invited as a ${role.value}. He or she should kindly check their email to continue to create their account`); setAlertHeader('Admin Successfully Invited!')
-      }).catch((err) => {
-        setSuccessAlert(true); setAlertClass('alert alert-danger alert-dismissible display'); setAlertContent(`${err}`); setAlertHeader('Error!')
-      })
-  }
+//                    <style>
+//                         .imgDiv{
+//                           height: 300px;
+//                         }
+//                         .content{
+//                           padding: 50px;
+//                         }
+//                         h2{
+//                           font-size: 18px;
+//                         }
+//                         @media only screen and (min-width: 480px) and (max-width: 767px){
+//                                h1{
+//                                     font-size: 22px;
+//                                }
+//                                h2{
+//                                     font-size: 20px;
+//                                }
+//                                h3{
+//                                     font-size: 19px;
+//                                }
+//                                p{
+//                                     font-size: 16px;
+//                                }
+//                                .content{
+//                                     padding: 20px;
+//                                }
+//                                .imgDiv{
+//                                     height: 180px;
+//                                }
+//                         }
+//                         @media (max-width: 767px){
+//                                h1{
+//                                     font-size: 22px;
+//                                }
+//                                h2{
+//                                     font-size: 20px;
+//                                }
+//                                h3{
+//                                     font-size: 19px;
+//                                }
+//                                p{
+//                                     font-size: 16px;
+//                                }
+//                                .content{
+//                                     padding: 20px;
+//                                }
+//                                .imgDiv{
+//                                     height: 180px;
+//                                }
+//                         }
+//                    </style>
+//               </head>
+//               <body>
+//                    <div class="emailContainer" style = "background-color: #f9f9f9; margin: 0px auto;">
+//                         <div>
+//                             <div style="width: 100%;" class="imgDiv">
+//                                  <a  href="index.html"><img style="width: 100%; height: 100%; object-fit: cover;" src="https://res.cloudinary.com/mike-ik/image/upload/v1652902981/Celz4-church-portal/toy-bricks-table-with-word-welcome_mdfguw.jpg"
+//                                  alt=""></a>
+//                              </div>
+//                         </div>
+//                         <div  class="content">
+//                                <h1 style="text-align: center; color:#003366;">Christ Embassy Lagos Zone 4</h1>
+//                                <h2 class="title" style="color:#003366;">Admin Invitation!</h2>
+//                                <h3><span id="applicantName" style="color: #003366; ">Hi <b><i>${firstnameRef.current?.value} ${lastnameRef.current?.value}</i></b></span></h3>
+//                                <p style="color: lignt-grey; line-height: 20px;">
+//                                    Congratulations, you have been invited to become a ${role.value} for ${church.value} Church
+//                                     <br/><br/>
+//                                     Kindly follow the link below to complete your registration and begin your administrative work
+//                                </p>
+//                                <ul class="menu">
+//                                     <li style="list-style-type: none;">Full Name: <b style="color:#003366; padding: 0px 5px;">${firstnameRef.current?.value} ${lastnameRef.current?.value}</b></li>
+//                                     <li style="list-style-type: none;">Role: <b style="color:#003366; padding: 0px 5px;">${role.value}</b></li>
+//                                </ul>
+//                                <p class="sign-up">Click <span><a href="http://localhost:3000/create-account?${params.toString()}" id="signUpLink" >here</a></span> to proceed to Create your Account</p>
+//                         </div>
+//                    </div>
+//               </body>
+//            </html>`
+//       }).then(() => {
+//         setSuccessAlert(true); setAlertClass('alert alert-success alert-dismissible display'); setAlertContent(`
+//         ${firstnameRef.current?.value} ${lastnameRef.current?.value} has successfully been invited as a ${role.value}. He or she should kindly check their email to continue to create their account`); setAlertHeader('Admin Successfully Invited!')
+//       }).catch((err: any) => {
+//         setSuccessAlert(true); setAlertClass('alert alert-danger alert-dismissible display'); setAlertContent(`${err}`); setAlertHeader('Error!')
+//       })
+//   }
 
 
 //Modals Start Here
 
   function openUpdateModal() {      
-    setHeaderText("Update Admin")
+    setHeaderText("Update Member")
       setContent(
         <React.Fragment>
         <form>
+          <div className='input__wrapper'>
+            <label className='flabel'>Title</label>
+            <select className='finput' placeholder='Select Role' id='title' defaultValue={updateRole}>
+                  <option  className='finput' value="">Select Title</option>
+                  <option  className='finput' value="Zonal Pastor">Zonal Pastor</option>
+                  <option  className='finput' value="Church Pastor">Church Pastor</option>
+                  <option  className='finput' value="Deacon">Deacon</option>
+                  <option  className='finput' value="Deaconess">Deaconess</option>
+                  <option  className='finput' value="Cell Leader">Cell Leader</option>
+                  <option  className='finput' value="Brother">Brother</option>
+                  <option  className='finput' value="Sister">Sister</option>
+            </select>
+          </div>
           <div className='input__wrapper'>
             <label className='flabel'>First Name</label>
             <input type="text" className='finput' ref={firstnameRef} defaultValue={updateFirstName}  onChange = {event => setUpdateFirstName(event.target.value)} />
@@ -478,22 +501,20 @@ function ManageAdmin() {
             <input type="email" className='finput' ref = {emailRef} defaultValue={updateEmail} onChange = {event => setUpdateEmail(event.target.value)} />
           </div>
           <div className='input__wrapper'>
-               <label className='flabel'>Phone Number</label>
-               <input type="phoneNumber" ref={phoneRef} defaultValue={updatePhoneNumber} onChange={event => setUpdatePhoneNumber(event.target.value)} />
+                    <label className='flabel'>Gender</label>
+                    <select  className="finput" id='gender' defaultValue={updateGender}> 
+                         <option  className='finput' value="">Select Gender</option>
+                         <option  className='finput' value="Male">Male</option>
+                         <option  className='finput' value="Female">Female</option>
+                    </select>
+          </div>
+          <div className='input__wrapper'>
+                <label className='flabel'>Phone Number</label>
+                <input className='finput'ref={phoneRef} defaultValue={updatePhone} type="tel" id="phone" name="phone" placeholder="08120839946" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" required />
           </div>
           <div className='input-wrapper'>
                <label className='flabel'>Date of Birth</label>
                <input type="date"  className="finput" ref={dateRef} defaultValue={updateDate} onChange={event => setUpdateDate(event.target.value)}/>
-          </div>
-          <div className='input__wrapper'>
-            <label className='flabel'>Role</label>
-            <select className='finput' placeholder='Select Role' id='role' defaultValue={updateRole}>
-                  <option  className='finput' value="">Select Role</option>
-                  <option  className='finput' value="Zonal Pastor">Zonal Pastor</option>
-                  <option  className='finput' value="Church Pastor">Church Pastor</option>
-                  <option  className='finput' value="Top Admin">Top Admin</option>
-                  <option  className='finput' value="Church Admin">Church Admin</option>
-            </select>
           </div>
           <div className='input__wrapper'>
             <label className='flabel'>Church</label>
@@ -505,10 +526,10 @@ function ManageAdmin() {
             </select>
             
           </div>
-          <div className='input__wrapper'>
+          {/* <div className='input__wrapper'>
             <label className='flabel'>Group</label>
             <input type="text" className='finput' ref={groupchurchRef} id = 'groupChurch' defaultValue={updateGroup} onChange = {event => setUpdateGroup(event.target.value)} />
-          </div>
+          </div> */}
           {/* <div className='input__wrapper'>
             <label className='flabel'>Status</label>
             <input type="text" className='finput' />
@@ -517,17 +538,21 @@ function ManageAdmin() {
         </form>
 
           <Buttons>
-              <button className='invite__button' onClick={() => {updateAdmin();}}>Submit</button>   
-              <button className='invite__button' onClick={toggle}>Close</button>                
+              <button className='invite__button' onClick={() => {updateMembers();}}>Submit</button>   
+              {/* <button className='invite__button' onClick={toggle}>Close</button>                 */}
           </Buttons>
       </React.Fragment>
       )
   }
 
   function openViewModal() {
-      setHeaderText("Admin Details")
+      setHeaderText("Member Details")
       setContent(
         <React.Fragment>
+          <div className='viewdetails__wrapper'>
+              <p className='viewlabel'>Title</p>
+              <p className='viewinput'>{updateRole}</p>
+          </div>
           <div className='viewdetails__wrapper'>
               <p className='viewlabel'>First Name</p>
               <p className='viewinput'>{updateFirstName}</p>
@@ -537,21 +562,29 @@ function ManageAdmin() {
               <p className='viewinput'>{updateLastName}</p>
           </div>
           <div className='viewdetails__wrapper'>
+              <p className='viewlabel'>Gender</p>
+              <p className='viewinput'>{updateGender}</p>
+          </div>
+          <div className='viewdetails__wrapper'>
               <p className='viewlabel'>Email</p>
               <p className='viewinput'>{updateEmail}</p>
           </div>
           <div className='viewdetails__wrapper'>
-              <p className='viewlabel'>Role</p>
-              <p className='viewinput'>{updateRole}</p>
+              <p className='viewlabel'>Phone Number</p>
+              <p className='viewinput'>{updatePhone}</p>
+          </div>
+          <div className='viewdetails__wrapper'>
+              <p className='viewlabel'>Date of Birth</p>
+              <p className='viewinput'>{updateDate}</p>
           </div>
           <div className='viewdetails__wrapper'>
               <p className='viewlabel'>Church</p>
               <p className='viewinput'>{updateChurch}</p>
           </div>
-          <div className='viewdetails__wrapper'>
+          {/* <div className='viewdetails__wrapper'>
               <p className='viewlabel'>Group</p>
               <p className='viewinput'>{updateGroup}</p>
-          </div>
+          </div> */}
           {/* <div className='viewdetails__wrapper'>
               <p className='viewlabel'>Status</p>
               <p className='viewinput'>Emeka chinye</p>
@@ -563,8 +596,11 @@ function ManageAdmin() {
       </React.Fragment>
       )
   }
+//   const year = (new Date()).getFullYear();
+//   const years = Array.from(new Array(80),( val, index) =>  year - index );
 
-  function openInviteModal() {
+
+  const openInviteModal = () => {
       setHeaderText("Add Member")
       
       setContent(
@@ -586,77 +622,135 @@ function ManageAdmin() {
               </div>
               <div className='input__wrapper'>
                 <label className='flabel'>Phone Number</label>
-                <PhoneInput type="phoneNumber" ref = {emailRef} containerStyle={{border: "1px solid #003366"    }}
-                inputStyle={{ padding: "14px 35px ", outline:"none", height: "50px", flex: "80% ", width: "500px"}}
-            />
+                <input className='finput'ref={phoneRef} type="tel" id="phone" name="phone" placeholder="08120839946" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" required />
               </div>
-              <div className='input-wrapper'>
+              <div className='input__wrapper'>
                     <label className='flabel'>Date of Birth</label>
                     <input type="date"  className="finput" ref={dateRef} />
               </div>
+              
               <div className='input__wrapper'>
-                <label className='flabel'>Role</label>
-                <select className='finput' placeholder='Select Role' id='role'>
+                    <label className='flabel'>Gender</label>
+                    <select  className="finput" id='gender' > 
+                         <option  className='finput' value="">Select Gender</option>
+                         <option  className='finput' value="Male">Male</option>
+                         <option  className='finput' value="Female">Female</option>
+                    </select>
+              </div>
+              <div className='input__wrapper'>
+                <label className='flabel'>title</label>
+                <select className='finput' placeholder='Select title' id='title'>
                   <option  className='finput' value="">Select Role</option>
                   <option  className='finput' value="Zonal Pastor">Zonal Pastor</option>
                   <option  className='finput' value="Church Pastor">Church Pastor</option>
-                  <option  className='finput' value="Top Admin">Deacon</option>
-                  <option  className='finput' value="Church Admin">Deaconess</option>
+                  <option  className='finput' value="Deacon">Deacon</option>
+                  <option  className='finput' value="Deaconess">Deaconess</option>
                   <option  className='finput' value="Cell Leader">Cell Leader</option>
                   <option  className='finput' value="Brother">Brother</option>
                   <option  className='finput' value="Sister">Sister</option>
                 </select>
               </div>
               <div className='input__wrapper'>
-                <label className='flabel'>Church</label>
-                <select className='finput' placeholder='Select Church' id='church' onChange={() => {handleChurchChange();}}>
-                  <option  className='finput' value="">Select Church</option>
-                  {churchesDetails.map(element => (
-                    <option  className='finput'  value={element.ChurchName}>{element.ChurchName}</option>
-                  ))}
-                </select>
-                {/* <input type="text" className='finput' ref={churchRef} /> */}
+                    <label className='flabel'>Church</label>
+                    <select className='finput' placeholder='Select Church'id='church' >
+                     <option value="">Select Church</option> 
+                     {
+                         userContext.churchesTable.map((church, index) => (
+                              <option value={church.Name} key = {index}>{church.Name}</option>
+                         ))
+                     }
+                    </select>
               </div>
-              <div className='input__wrapper'>
+              {/* <div className='input__wrapper'>
                 <label className='flabel'>Group</label>
                 <input type="text" className='finput' id='groupChurch' ref={groupchurchRef} />
-              </div>
+              </div> */}
         </form>
         <Buttons>  
-            <button className='invite__button' onClick={() => { sendEmail();}}>Submit</button>
+            <button className='invite__button' onClick={() => { inviteMembers();}}>Submit</button>
         </Buttons>
       </React.Fragment>
       )
   } 
 // Modals End Here
 
+function inviteMembers(e?: { preventDefault: () => void; }){
+     let title = document.getElementById('title') as HTMLSelectElement;
+     let gender = document.getElementById('gender') as HTMLSelectElement;
+     let church = document.getElementById('church') as HTMLSelectElement;
+     const members = {
+          title: title.value,
+         firstName: firstnameRef.current?.value,
+         lastName: lastnameRef.current?.value,
+         gender: gender.value,
+         phoneNumber: phoneRef.current?.value,
+         email: emailRef.current?.value,
+         dateOfBirth: dateRef.current?.value,
+         church: church.value,
+     //     groupChurch: groupchurchRef.current?.value
+     }
+       e?.preventDefault()
+       console.log(members)
+       fetch(`${requests.postMember}${id}`,{
+         method : 'POST',
+         body : JSON.stringify(members),
+         headers: {
+             'content-Type': 'application/json'
+         }
+       }).then(response =>{return response}).then((data) => {
+         setSuccessAlert(true); setAlertClass('alert alert-success alert-dismissible display'); setAlertContent(`Details of admin with id ${id} has been successfully updated. Kindly refresh to see changes`); setAlertHeader('Admin Successfully Updated!')
+         console.log(data);
+       }).catch(err => {
+         setSuccessAlert(true); setAlertClass('alert alert-danger alert-dismissible display'); setAlertContent(`${err}`); setAlertHeader('Error!')
+         console.log(err)
+       })
+   }
 
-  function updateAdmin(e?: { preventDefault: () => void; }){
-    let role = document.getElementById('role') as HTMLSelectElement;
-    let church = document.getElementById('church') as HTMLSelectElement;
-    const admin = {
-        firstName: firstnameRef.current?.value,
-        lastName: lastnameRef.current?.value,
-        email: emailRef.current?.value,
-        role: role.value,
-        church: church.value,
-        groupChurch: groupchurchRef.current?.value
-    }
-      e?.preventDefault()
-      fetch(`https://celz4-api.herokuapp.com/v2/admin/update/${id}`,{
-        method : 'PUT',
-        body : JSON.stringify(admin),
-        headers: {
-            'content-Type': 'application/json'
-        }
-      }).then(response =>{return response.json()}).then((data) => {
-        setSuccessAlert(true); setAlertClass('alert alert-success alert-dismissible display'); setAlertContent(`Details of admin with id ${id} has been successfully updated. Kindly refresh to see changes`); setAlertHeader('Admin Successfully Updated!')
-        console.log(data);
-      }).catch(err => {
-        setSuccessAlert(true); setAlertClass('alert alert-danger alert-dismissible display'); setAlertContent(`${err}`); setAlertHeader('Error!')
-      })
+  function updateMembers(e?: { preventDefault: () => void;}){
+     let title = document.getElementById('title') as HTMLSelectElement;
+     let gender = document.getElementById('gender') as HTMLSelectElement;
+     let church = document.getElementById('church') as HTMLSelectElement;
+     const members = {
+          title: title.value,
+         firstName: firstnameRef.current?.value,
+         lastName: lastnameRef.current?.value,
+         gender: gender.value,
+         phoneNumber: phoneRef.current?.value,
+         email: emailRef.current?.value,
+         dateOfBirth: dateRef.current?.value,
+         church: church.value,
+     //     groupChurch: groupchurchRef.current?.value
+     }
+       e?.preventDefault()
+       console.log(members)
+       fetch(`${requests.updateMembers}${id}`,{
+         method : 'PUT',
+         body : JSON.stringify(members),
+         headers: {
+             'content-Type': 'application/json'
+         }
+       }).then(response =>{return response}).then((data) => {
+         setSuccessAlert(true); setAlertClass('alert alert-success alert-dismissible display'); setAlertContent(`Details of admin with id ${id} has been successfully updated. Kindly refresh to see changes`); setAlertHeader('Admin Successfully Updated!')
+         console.log(data);
+       }).catch(err => {
+         setSuccessAlert(true); setAlertClass('alert alert-danger alert-dismissible display'); setAlertContent(`${err}`); setAlertHeader('Error!')
+         console.log(err)
+       })
   }
 
+  function deleteMembers(id: string) {
+     console.log(id)
+     fetch(`${requests.deleteMembers}${id}`,{
+          method: 'delete',
+     }).then(response =>{return response}).then((data) => {
+          setSuccessAlert(true); setAlertClass('alert alert-success alert-dismissible display'); setAlertContent(`Details of admin with id ${id} has been successfully deleted. Kindly refresh to see changes`); setAlertHeader('Admin Successfully Deleted!')
+          console.log(data);
+        }).catch(err => {
+          setSuccessAlert(true); setAlertClass('alert alert-danger alert-dismissible display'); setAlertContent(`${err}`); setAlertHeader('Error!')
+          console.log(err)
+        })
+     
+  }
 
   document.querySelectorAll(".table__update__button")!.forEach(element => {
     element.addEventListener("click", handleUpdateAdmin);
@@ -668,32 +762,34 @@ function ManageAdmin() {
   function handleUpdateAdmin(this: any) {
       let tableRow = this.parentNode.parentNode;
       setId(tableRow.cells[0].innerHTML);
-      setUpdateFirstName(tableRow.cells[1].innerHTML);
-      setUpdateLastName(tableRow.cells[2].innerHTML);
-      setUpdateEmail(tableRow.cells[3].innerHTML);
-      setUpdateRole(tableRow.cells[4].innerHTML);
-      setUpdateChurch(tableRow.cells[5].innerHTML);
-      setUpdateGroup(tableRow.cells[6].innerHTML);
+      setUpdateRole(tableRow.cells[1].innerHTML);
+      setUpdateFirstName(tableRow.cells[2].innerHTML);
+     setUpdateLastName(tableRow.cells[3].innerHTML);
+     setUpdateGender(tableRow.cells[4].innerHTML);
+     setUpdateEmail(tableRow.cells[5].innerHTML);
+     setUpdatePhone(tableRow.cells[6].innerHTML);
+     setUpdateDate(tableRow.cells[7].innerHtml);
+     setUpdateChurch(tableRow.cells[8].innerHTML);
 
   }
 
   function handleViewAdmin(this: any) {
     let tableRow = this.parentNode.parentNode;
     setId(tableRow.cells[0].innerHTML);
-    setUpdateFirstName(tableRow.cells[1].innerHTML);
-    setUpdateLastName(tableRow.cells[2].innerHTML);
-    setUpdateEmail(tableRow.cells[3].innerHTML);
-    setUpdateRole(tableRow.cells[4].innerHTML);
-    setUpdateChurch(tableRow.cells[5].innerHTML);
-    setUpdateGroup(tableRow.cells[6].innerHTML);
-
+    setUpdateRole(tableRow.cells[1].innerHTML);
+    setUpdateFirstName(tableRow.cells[2].innerHTML);
+    setUpdateLastName(tableRow.cells[3].innerHTML);
+    setUpdateGender(tableRow.cells[4].innerHTML);
+    setUpdateEmail(tableRow.cells[5].innerHTML);
+    setUpdatePhone(tableRow.cells[6].innerHTML);
+    setUpdateDate(tableRow.cells[7].innerHtml);
+    setUpdateChurch(tableRow.cells[8].innerHTML);
   } 
 
   function clearForm(){
       firstnameRef.current!.value = '';
       lastnameRef.current!.value = '';
       emailRef.current!.value = '';
-      roleRef.current!.value = '';
       churchRef.current!.value = '';
       groupchurchRef.current!.value = '';
   }
@@ -701,30 +797,33 @@ function ManageAdmin() {
   
   
 
-  const headers = ['ID','First Name', 'Last Name', 'Email', 'Date of Birth', 'Role', 'Church', 'Group', " "]
-  const adminArray = userContext.adminTableData.map(({id, firstName, lastName, email, dob, role, church, groupChurch}) => {
-      return {id, firstName, lastName, email, dob,  role, church, groupChurch}
+  const headers = ['ID','Title', 'First Name', 'Last Name', 'Gender', 'Email', 'Phone Number', 'Date of Birth', 'Church', " "]
+  const memberArray = tableData.map(({Id, Title, FirstName, LastName, Gender, Email, PhoneNumber, DateOfBirth, Church,}) => {
+      return {Id, Title, FirstName, LastName, Gender, Email, PhoneNumber, DateOfBirth, Church, }
   })
   const actions = <React.Fragment >
-      <button className='table__button table__update__button' onClick={() => { toggle(); openUpdateModal();}}>
+      <button className='table__button table__update__button'  onClick={() => { toggle(); openUpdateModal();}}>
         <span><FiRefreshCw className='table-button-icon' /></span> Update
       </button>
       <button className='table__button table__view__button' onClick={() => { toggle(); openViewModal();}}>
          <span><FaRegEye className='table-button-icon' /></span> View
+      </button>
+      <button className='table__button table__view__button' onClick={() => {deleteMembers(id);}}>
+         <span><MdDeleteForever className='table-button-icon' /></span> Delete
       </button>
   </React.Fragment>
 
 
   return (
     <Container>
-      <SideNav />
+      {/* <SideNav /> */}
       <Contain show={userContext.isOpened}>
         <Header />
         <Content>
           <Actions>
             <button className='invite__button' onClick={()=> {toggle();  openInviteModal();}}> <span ><BiPlusMedical /></span> Add Member</button>
           </Actions>
-        <DataTable data={adminArray} headers = {headers} actions = {actions} tableTitle = 'CELZ4 Birthday Database'/> 
+        <DataTable data={memberArray} headers = {headers} actions = {actions} tableTitle = 'CELZ4 Birthday Database'/> 
         <div className= {successAlert? alertClass : "hide"}>
             <button type="button" className="close" data-dismiss="alert" onClick= {() => {setSuccessAlert(false);}}>&times;</button>
               <h4><b>{alertHeader}</b></h4>
@@ -733,11 +832,12 @@ function ManageAdmin() {
         <Modal isShown={isShown} hide={toggle} modalContent={content} headerText={headerText} />
         </Content>
       </Contain>
+      <Footer/>
     </Container>
   )
 }
 
-export default ManageAdmin
+export default ManageMembers
 interface Iprops{
   show: boolean;
 }
@@ -747,7 +847,7 @@ position: relative;
 `
 const Contain =Styled.div<Iprops >`
     position: relative;
-    margin-left: ${props => props.show ? '300px':'78px'};
+    /* margin-left: ${(props: { show: any; }) => props.show ? '300px':'78px'}; */
     height: 100vh;
     overflow: auto;
     background-color: #f1f2f3;
@@ -778,7 +878,5 @@ const Buttons =Styled.div`
    justify-content: flex-end;
    /* margin: 10px 50px;  */
 `
-
-
 
 

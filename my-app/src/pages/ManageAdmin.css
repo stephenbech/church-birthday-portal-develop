@@ -85,3 +85,19 @@
 .display .close:focus{
     outline: none !important;
 }
+.phoneInput div{
+     width: 80% !important;
+     border-radius: 4px !important;
+     display: flex !important;
+     
+}
+.phoneInput div input{
+     border: 1px solid red !important;
+     flex: 80% !important;
+}
+
+/* .phoneInput div div.flag-dropdown {
+} */
+/* .phoneInput div div.special-label {
+     display: none !important;
+} */

@@ -12,7 +12,7 @@ export function GlobalFilter({
   }: globalFilterProp) {
    const [value, setValue] = useState(globalFilter);
    
-   const onChange = useAsyncDebounce((value) => {
+   const onChange = useAsyncDebounce((value: any) => {
      setGlobalFilter(value || undefined);
    }, 200);
    
@@ -85,14 +85,14 @@ export function SelectColumnFilter({
        preFilteredRows.forEach((row: { values: []; }) => {
          options.add(row.values[id]);
        });
-       return [...options.values()];
+       return [options.values()];
      }, [id, preFilteredRows]);
      
      // UI for Multi-Select box
      return (
        <select
          value={filterValue}
-         onChange={(e) => {
+         onChange={(e: { target: { value: any; }; }) => {
            setFilter(e.target.value || undefined );
          }}
        >

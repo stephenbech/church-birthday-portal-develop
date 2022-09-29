@@ -4,7 +4,7 @@ import { FC } from 'react';
 import { AiFillCaretDown, AiFillCaretRight, AiOutlineFileText, AiOutlineLineChart} from "react-icons/ai";
 import { BsFillCollectionFill , BsBroadcast } from "react-icons/bs";
 import { BiGridAlt, BiCollection, BiChurch, BiCopyright,BiLogOut } from "react-icons/bi";
-import { MdAdminPanelSettings, MdHomeRepairService } from "react-icons/md";
+import { MdAdminPanelSettings, MdOutlineGroups, MdHomeRepairService } from "react-icons/md";
 import { FaHandHoldingUsd, FaRegListAlt } from "react-icons/fa";
 import { useContext } from 'react';
 import Context from './Contexts';
@@ -46,20 +46,20 @@ function SideNav(){
           </LogoDiv>
           <Navigations show = {userContext.isOpened}>
                <ul className='menu'>
-                    <li className='items' onClick={() => {navigate("/dashboard")}}>
+                    {/* <li className='items' onClick={() => {navigate("/dashboard")}}>
                          <a href='#'>
                               <BiGridAlt className='icon' />
                               <span className={userContext.isOpened? 'link-name': 'hide'}>Dashboard</span>
                          </a>
                          
-                    </li>
-                    <li className='items' onClick={()=> {navigate('/all-services')}}>
+                    </li> */}
+                    {/* <li className='items' onClick={()=> {navigate('/all-services')}}>
                          <a href='#'>
                               <BsBroadcast className='icon' />
                               <span className={userContext.isOpened? 'link-name': 'hide'}>Manage Service</span>
                          </a>
-                    </li>
-                    <li className='items'> 
+                    </li> */}
+                    {/* <li className='items'> 
                          <div className='icon-link'>
                               <a href='#'>
                                    <BiCollection className='icon' />
@@ -76,17 +76,23 @@ function SideNav(){
 
                
                          </ul>
-                    </li>
-                    <li className='items' onClick={() => {navigate("/manage-churches")}}>
+                    </li> */}
+                    {/* <li className='items' onClick={() => {navigate("/manage-churches")}}>
                          <a href='#'>
                               <BiChurch className='icon' />
                               <span className={userContext.isOpened? 'link-name': 'hide'}>Manage Church</span>
                          </a>
-                    </li>
+                    </li> */}
                     <li className='items'onClick={() => {navigate("/manage-admin")}} >
                          <a href='#'>
                               <MdAdminPanelSettings className='icon' />
                               <span className={userContext.isOpened? 'link-name': 'hide'} >Manage Admin</span>
+                         </a>
+                    </li>
+                    <li className='items'onClick={() => {navigate("/manage-members")}} >
+                         <a href='#'>
+                              <MdOutlineGroups className='icon' />
+                              <span className={userContext.isOpened? 'link-name': 'hide'} >Manage Members</span>
                          </a>
                     </li>
                </ul>
@@ -117,7 +123,7 @@ const Nav = styled.div<Iprops>`
      top: 0;
      left: 0;
      bottom: 0;
-     width: ${props => props.show ? '300px':'78px'};
+     width: ${(props: { show: any; }) => props.show ? '300px':'78px'};
      height: 100vh;
      background-color: #01162c; 
      transition: all 0.35s ease; 
@@ -157,7 +163,7 @@ const LogoDiv = styled.div`
 export const Navigations = styled.nav<Iprops>`
      height: 70vh;
      overflow-Y: auto;
-     padding: ${props => props.show ? '0px 15px':'0px 5px'};
+     padding: ${(props: { show: any; }) => props.show ? '0px 15px':'0px 5px'};
      &::-webkit-scrollbar{
           display: none;
      }

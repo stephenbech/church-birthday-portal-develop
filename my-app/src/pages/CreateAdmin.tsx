@@ -3,10 +3,13 @@ import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import './CreateAdmin.css';
 import { setAccount } from '../utilities/HttpConnection';
+import requests from '../utilities/requests';
 function CreateAdmin() {
      const [firstName, setFirstName] = useState<string | null>()
      const [lastName, setLastName] = useState<string | null>()
+     const [gender, setGender] =  useState<string | null>()
      const [email, setEmail] = useState<string | null>()
+     const [phoneNumber, setPhoneNumber] = useState<string | null>()
      const [role, setRole] = useState<string | null>()
      const [church, setChurch] = useState<string | null>()
      const [groupChurch, setGroupChurch] = useState<string | null>()
@@ -29,32 +32,37 @@ function CreateAdmin() {
           let params = new URLSearchParams(queryString); 
           setFirstName(params.get('firstname'));
           setLastName(params.get('lastname'));
+          setGender(params.get('gender'));
           setRole(params.get('role'));
           setEmail(params.get('email'));
+          setPhoneNumber(params.get('phone'));
           setChurch(params.get('church'));
           setGroupChurch(params.get('groupchurch'));
      }, []);
 
      
-     function createAdmin(){
+     function createAdmin(e?: { preventDefault: () => void; }){
           const admin: setAccount = {
                firstName: firstName,
                lastName: lastName,
+               gender: gender,
                email: email,
+               phoneNumber: phoneNumber,
                role: role,
                church: church,
                groupChurch: groupChurch,
                password: passwordRef.current?.value,
           }
-
-          fetch(`https://celz4-api.herokuapp.com/v2/admin/create`,{
+          e?.preventDefault()
+           console.log(admin)
+          fetch(`${requests.postUsers}`,{
                method : 'POST',
                body : JSON.stringify(admin),
                headers: {
                'content-Type': 'application/json'
                }
-          }).then(response =>{return response.json()}).then((data) => {
-               alert('Church created successfully');
+          }).then(response =>{return response}).then((data) => {
+               alert('Church admin created successfully');
                navigate('/sucessful')
 
           })
@@ -179,21 +187,34 @@ function CreateAdmin() {
                          <input type="text" className='finput'  value ={lastName} />
                     </div>
                     <div className='input__wrapper'>
+                         <label className='flabel'>Gender</label>
+                         <input type="text" className='finput' value ={gender} />
+                         {/* <select  className="finput" id='gender' onChange={(e) => {setGender(e.target.value)}} > 
+                              <option  className='finput' value="">Select Gender</option>
+                              <option  className='finput' value="Male">Male</option>
+                              <option  className='finput' value="Female">Female</option>
+                         </select> */}
+                    </div>
+                    <div className='input__wrapper'>
                          <label className='flabel'>Email</label>
                          <input type="text" className='finput' readOnly value ={email} />
                     </div>
                     <div className='input__wrapper'>
+                         <label className='flabel'>Phone Number</label>
+                         <input type="text" className='finput' value ={phoneNumber} />
+                    </div>
+                    <div className='input__wrapper'>
                          <label className='flabel'>Role</label>
-                         <input type="text" className='finput' readOnly value ={role} />
+                         <input type="text" className='finput' readOnly value={role} />
                     </div>
                     <div className='input__wrapper'>
                          <label className='flabel'>Church</label>
                          <input type="text" className='finput' readOnly value ={church} />
                     </div>
-                    <div className='input__wrapper'>
+                    {/* <div className='input__wrapper'>
                          <label className='flabel'>Group</label>
                          <input type="text" className='finput' readOnly value ={groupChurch} />
-                    </div>
+                    </div> */}
                     <div className='input__wrapper'>
                          <label className='flabel'>Password</label>
                          <input type="password"  id= 'psw' className='finput' pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"  placeholder='Create Password' ref={passwordRef} required />
@@ -237,6 +258,7 @@ const ImageDiv = styled.div`
 
 const FormDiv = styled.div`
      flex: 50%;
+     margin-right: 50px;
      display: flex; 
      flex-direction: column;
      padding-top: 50px;

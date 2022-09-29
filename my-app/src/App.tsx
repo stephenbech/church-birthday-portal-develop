@@ -21,6 +21,7 @@ import CellReports from './pages/CellReports'
 import SubmitCellReport from './pages/SubmitCellReport';
 import PartnershipReports from './pages/PartnershipReports';
 import SubmitPartnershipReport from './pages/SubmitPartnershipReport';
+import ManageMembers from './pages/ManageMembers';
 function App(){
   return (
     <div className="App">
@@ -49,9 +50,10 @@ function MyRoutes() {
          <BrowserRouter>
 
            <Routes>
-            {(!isLoggedIn) ? <Route path="/" element={<Login />} /> : <Route path="/dashboard" element={<Dashboard />} />}
+            {(!isLoggedIn) ? <Route path="/" element={<Login />} /> : <Route path="/manage-members" element={<ManageMembers />} />}
              <Route path="/error" element={<Error />} />
              <Route path="/manage-admin" element={<ManageAdmin />} /> 
+             <Route path="/manage-members" element={<ManageMembers />} /> 
              <Route path="/manage-churches" element={<ManageChurches />} />
              <Route path='/all-services' element={<AllServices />}/>
              <Route path='/create-account' element ={<CreateAdmin/>} />
@@ -64,7 +66,7 @@ function MyRoutes() {
               <Route path="/submit-partnership-report" element={<SubmitPartnershipReport />} />
             <Route path='/financial-reports' element={<FinancialReport/>} />
             <Route path="/submit-partnership-report" element={<SubmitPartnershipReport/>} />
-             < Route path='*' element={<Navigate to={ (!isLoggedIn ) ? '/' : '/dashboard'  } />} />
+             < Route path='*' element={<Navigate to={ (!isLoggedIn ) ? '/' : '/manage-members'  } />} />
            </Routes>
 
          </BrowserRouter>

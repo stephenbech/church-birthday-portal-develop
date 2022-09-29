@@ -13,7 +13,7 @@ function Dashboard() {
   const navigate = useNavigate()
   return (
     <Container>
-      <SideNav />
+      {/* <SideNav /> */}
       <Contain show={userContext.isOpened}>
         <Header />
         <Content>
